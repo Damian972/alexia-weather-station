@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Smartech Sensor</title>
+    <link rel="stylesheet" href="assets/mustard-ui.css">
+    <link rel="stylesheet" href="assets/chart.css">
+    <script src="assets/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="align-center">
+            <h2>Température: <span id="last_temp"></span></h2>
+            <p>Enregistré le: <span id="last_temp_date"></span></p>
+        </div>
+        <small></small>
+        <div class="max-width: 900px; max-height: 400px;">
+            <canvas id="chart" width="800" height="400"></canvas>
+        </div>
+        <div>
+            <input type="date" id="datetime-picker">
+            <button onclick="getDataFromDate()">Charger</button>
+        </div>
+    </div>
+    <script src="assets/app.js"></script>
+</body>
+
+</html>

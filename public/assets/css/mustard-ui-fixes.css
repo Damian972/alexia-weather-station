@@ -1,0 +1,49 @@
+html {
+    scroll-behavior: smooth;
+}
+
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    z-index: 10;
+}
+
+.text-white {
+    color: white !important;
+    opacity: 0.6;
+}
+
+input[type="date"],
+input[type="datetime"],
+input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    line-height: 20px;
+    font-size: 16px;
+    font-weight: inherit;
+    background: #fff;
+    border-radius: 5px;
+    border: 1px solid #bdbdbd;
+}
+
+.custom-chart {
+    width: 800px;
+    height: 400px;
+    max-width: 800px;
+    max-height: 400px;
+}
+
+@media screen and (max-width: 900px) {
+    .custom-chart {
+        width: 320px;
+        height: 400px;
+        max-width: 320px;
+        max-height: 400px;
+    }
+}

@@ -1,0 +1,7 @@
+*.docx
+*.txt
+templates/bak
+config/config.php
+var/*.sqlite
+var/*.txt
+var/templates
