@@ -1,22 +1,23 @@
 <?php
 
 define('ROOT', dirname(__FILE__, 2));
-require(ROOT.'/config/config.php');
-require(INC.'/Database.php');
-require(INC.'/Smarty.class.php');
-require(INC.'/Utils.php');
+
+require(ROOT.'/vendor/autoload.php');
 
 # Start session
 session_start();
 
 # Redirect user if not logged
 if (NEED_LOGIN && !Utils::isLogged()) header('Location: '.BASE_URL.'/login.php');
-Utils::debug($_SESSION);
+//Utils::debug($_SESSION);
 
-$options = Utils::getOptionsFromDb((new Database()));
+$options = Utils::getOptionsFromDb(Utils::getDatabase());
 
 # Views
 $smarty = Utils::getSmartyInstance();
 
 $smarty->assign(compact('options'));
 $smarty->display('index.view.tpl');
+
+Utils::clearFlash();
+Utils::clearFormLastErrors();

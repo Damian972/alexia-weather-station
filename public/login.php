@@ -2,10 +2,7 @@
 
 define('ROOT', dirname(__FILE__, 2));
 //die(var_dump(ROOT));
-require(ROOT.'/config/config.php');
-require(INC.'/Database.php');
-require(INC.'/Smarty.class.php');
-require(INC.'/Utils.php');
+require(ROOT.'/vendor/autoload.php');
 
 # Start session
 session_start();
@@ -22,8 +19,8 @@ if (isset($_POST['login_form'])) {
 
         if (5 > strlen($password)) $_SESSION['form_errors']['password'] = 'Vos identifiants sont incorrects !';
         if (empty($_SESSION['form_errors'])) {
-            $pdo = new Database();
-            $user_account = $pdo->row('SELECT * FROM users WHERE email = :email', ['email' => htmlspecialchars($email)]);
+            $db = Utils::getDatabase();
+            $user_account = $db->get('users', ['username', 'email', 'password'], ['email' => htmlspecialchars($email)]);
             if (!empty($user_account)) {
                 if ($user_account['password'] === Utils::encryptData(htmlspecialchars($password))) {
                     // Set user's session
@@ -34,7 +31,7 @@ if (isset($_POST['login_form'])) {
                     ];
                     Utils::redirectToHome();
 
-                } $_SESSION['form_errors']['password'] = 'Votre mot de passe est incorrect !';
+                } else $_SESSION['form_errors']['password'] = 'Votre mot de passe est incorrect !';
             } else Utils::setFlash('Votre compte n\'existe pas !', 'danger');
         }
     }  else $_SESSION['form_errors']['email'] = 'Merci de bien vouloir entrer un email valide.';
