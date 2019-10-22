@@ -97,7 +97,10 @@ return [
         ['data', array(
             ['temperature' => 30.9, 'created_at' => date('Y-m-d H:i:s', strtotime('now'))],
             ['temperature' => 25, 'created_at' => date('Y-m-d H:i:s', strtotime('+0 day'))],
-            ['temperature' => 30.9, 'created_at' => date('Y-m-d H:i:s', strtotime('+1 day'))]
+            ['temperature' => 34, 'created_at' => date('Y-m-d H:i:s', strtotime('+1 day'))],
+            ['temperature' => 28, 'created_at' => date('Y-m-d H:i:s', strtotime('now'))],
+            ['temperature' => 24, 'created_at' => date('Y-m-d H:i:s', strtotime('+0 day'))],
+            ['temperature' => 26, 'created_at' => date('Y-m-d H:i:s', strtotime('+1 day'))]
         )]
     ]
 ];
