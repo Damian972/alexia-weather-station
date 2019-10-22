@@ -19,7 +19,7 @@ define('CACHE', VARF.'/cache');
 /**
  * Database Settings:
  */
-define('DB_SQLITE', true);
+define('DB_TYPE', 'sqlite');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'alexia-weather');
 define('DB_USER', 'root');
