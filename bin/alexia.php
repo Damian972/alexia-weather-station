@@ -2,9 +2,9 @@
 
 define('ROOT', dirname(__FILE__, 2));
 
-require(ROOT.'/config/config.php');
-require(INC.'/Database.php');
-require(INC.'/Utils.php');
+require(ROOT.'/vendor/autoload.php');
+
+$db_data = require(ROOT.'/config/database-tables.php');
 
 $args = getopt('', ['install', 'load-fixtures']);
 $config = [
@@ -13,25 +13,26 @@ $config = [
 ];
 
 $db_data = require(ROOT.'/config/database-tables.php');
+$db = Utils::getDatabase();
 
-$pdo = new Database();
 if ($config['install']) {
     try {
-        foreach ($db_data['tables'] as $table) {
-            $pdo->query($table);
+        for ($i = 0; $i < count($db_data['tables']); $i++) {
+            $db->create($db_data['tables'][$i][0], $db_data['tables'][$i][1]);
         }
         echo '[+] Tables creation: OK'.PHP_EOL;
-        foreach ($db_data['data']['users'] as $user) {
-            $user['password'] = Utils::encryptData($user['password']);
-            $user['created_at'] = date('Y-m-d H:i:s');
-            if (!$pdo->row('SELECT * FROM users where email = :email', ['email' => $user['email']]))
-                $pdo->query('INSERT INTO users (username, email, password, created_at, modified_at) VALUES (:username, :email, :password, :created_at, :created_at)', $user);
+        #-------------------
+        for ($i = 0; $i < count($db_data['default']); $i++) {
+            foreach ($db_data['default'][$i][1] as $item) {
+                if ('users' === $db_data['default'][$i][0]) {
+                    if (!empty($db->select('users', '*', ['email' => $item['email']]))) break;
+                } elseif ('options' === $db_data['default'][$i][0]) {
+                    if (!empty($db->select('options', '*', ['name' => $item['name']]))) break;
+                }
+                $db->insert($db_data['default'][$i][0], $item);
+            }
         }
-        echo '[+] Users creation: OK'.PHP_EOL;
-        foreach ($db_data['data']['options'] as $k => $v) {
-            $pdo->query('INSERT INTO options (key, value) VALUES (:k, :v)', compact('k', 'v'));
-        }
-        echo '[+] Options creation: OK'.PHP_EOL;
+        echo '[+] Default data creation: OK'.PHP_EOL;
     } catch (\Exception $e) {
         echo $e->getMessage();
     }
@@ -39,17 +40,18 @@ if ($config['install']) {
 
 if ($config['fixtures']) {
     try {
-        // load fitures for data tables
-        foreach ($db_data['fixtures']['data'] as $data) {            
-            $pdo->query('INSERT INTO data (temperature, created_at) VALUES (:temperature, :created_at)', [
-                'temperature' => $data['temperature'],
-                'created_at' => date('Y-m-d H:i:s', strtotime($data['created_at']))
-            ]);
+        for ($i = 0; $i < count($db_data['fixtures']); $i++) {
+            foreach ($db_data['fixtures'][$i][1] as $item) {
+                if ('users' === $db_data['fixtures'][$i][0]) {
+                    if (!empty($db->select('users', '*', ['email' => $item['email']]))) break;
+                } elseif ('options' === $db_data['fixtures'][$i][0]) {
+                    if (!empty($db->select('options', '*', ['name' => $item['name']]))) break;
+                }
+                $db->insert($db_data['fixtures'][$i][0], $item);
+            }
         }
         echo '[+] Fixtures loaded: OK'.PHP_EOL;
     } catch (\Exception $e) {
         echo $e->getMessage();
     }
 }
-
-$pdo->CloseConnection();

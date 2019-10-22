@@ -1,0 +1,17 @@
+{
+    "name": "damian972/alexia-weather-station",
+    "license": "MIT",
+    "authors": [{
+        "name": "Damian972"
+    }],
+    "require": {
+        "catfan/medoo": "^1.7"
+    },
+    "autoload": {
+        "files": [
+            "config/config.php",
+            "includes/Smarty.class.php",
+            "includes/Utils.php"
+        ]
+    }
+}
