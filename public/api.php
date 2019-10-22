@@ -2,29 +2,38 @@
 
 define('ROOT', dirname(__FILE__, 2));
 
-require(ROOT.'/config/config.php');
-require(INC.'/Database.php');
+require(ROOT.'/vendor/autoload.php');
 
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
 try {
-    $pdo = new Database();
+    $db = Utils::getDatabase();
     $result = [];
-    $sql_q = 'SELECT * FROM data';
+    $query_requirements = [];
 
     $limit = !empty($_GET['limit']) ? (int) $_GET['limit'] ?? false : false;
     if (false !== $limit && 0 >= $limit) $limit = false;
     $sort = !empty($_GET['sort']) ? 'desc' === $_GET['sort'] ? 'desc' : 'asc' : false;
 
     if (!empty($_GET['date'])) {
-        $sql_q.= ' WHERE created_at LIKE :created_at';
-        $pdo->bind('created_at', filter_input(INPUT_GET, "date", FILTER_SANITIZE_STRING).'%');
+        $query_requirements['created_at[~]'] = filter_input(INPUT_GET, "date", FILTER_SANITIZE_STRING).'%';
     }
-    if ($sort) $sql_q.= ' ORDER BY id '.$sort;
-    if ($limit) $sql_q.= ' LIMIT '.$limit;
+    if ($sort) $query_requirements['ORDER'] = array('id' => strtoupper($sort));
+    if ($limit) $query_requirements['LIMIT'] = $limit;
     
-    echo json_encode($pdo->query($sql_q));
+    echo json_encode($db->select('data', ['id', 'temperature', 'created_at'], $query_requirements));
 } catch (Exception $e) {
     echo json_encode(['error' => 'Bad query']);
 }
+
+/*$limit = !empty($_GET['limit']) ? (int) $_GET['limit'] ?? false : false;
+    if (false !== $limit && 0 >= $limit) $limit = false;
+    $sort = !empty($_GET['sort']) ? 'desc' === $_GET['sort'] ? 'desc' : 'asc' : false;
+
+    if (!empty($_GET['date'])) {
+        $sql_q.= ' WHERE created_at LIKE :created_at';
+        $sql_value_to_bind[':created_at'] = filter_input(INPUT_GET, "date", FILTER_SANITIZE_STRING).'%';
+    }
+    if ($sort) $sql_q.= ' ORDER BY id '.$sort;
+    if ($limit) $sql_q.= ' LIMIT '.$limit;*/
