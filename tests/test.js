@@ -58,6 +58,17 @@ function update_chart(data) {
         no_data_p.innerHTML = '* ' + message;
         console.log('[-] ' + message);
     } else {
+        // if error return by the api
+        if (not_null_or_undefined(data.error)) {
+            last_temp_element.innerHTML = 'NaN';
+            last_temp_date_element.innerHTML = 'NaN';
+            no_data_element.innerHTML = '* The API seems to have problems, try again later.';
+            return;
+        }
+
+        // reverse array
+        data = data.reverse();
+
         // set new data
         for (let i = 0; i < data.length; i++) {
             window.chart.data.datasets[0].data[i] = data[i].temperature;

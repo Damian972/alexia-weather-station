@@ -89,10 +89,18 @@
                 last_temp_date_element.innerHTML = 'NaN';
                 // set no data message
                 let message = 'There is nothing to show for ';
-                message += ('' === date) ? 'now' : date;
+                message += ('' === date) ? 'now' : date + '.';
                 no_data_element.innerHTML = '* ' + message;
                 console.log('[-] ' + message);
             } else {
+                // if error return by the api
+                if (not_null_or_undefined(data.error)) {
+                    last_temp_element.innerHTML = 'NaN';
+                    last_temp_date_element.innerHTML = 'NaN';
+                    no_data_element.innerHTML = '* The API seems to have problems, try again later.';
+                    return;
+                }
+
                 // reverse array
                 data = data.reverse();
 
