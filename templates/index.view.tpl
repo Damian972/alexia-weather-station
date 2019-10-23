@@ -5,7 +5,7 @@
 {block name="header_js"}<script src="{$smarty.const.ASSETS|cat: '/js/chart.js'}"></script>
 <script>
     // In seconds
-    const CHART_REFRESH_INTERVAL = {$options.refresh_time_gui|default: '30'};
+    const CHART_REFRESH_INTERVAL = {$options.refresh_time_gui|default: '120'};
     const LIMIT_DATA_TO_SHOW = (900 < window.innerWidth) ? {$options.max_data_to_show|default: '10'} : 5;
 </script>
 {/block}
@@ -51,6 +51,22 @@
             <small class="validation-error">*Résultats basés sur toutes les données de la journée</small>
         </div>
     </section>
+    <div class="container align-center">
+        <section>
+            <h2>Historique des températures</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Temperature</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="table_history">
+                </tbody>
+            </table>
+        </section>
+    </div>
 {/block}
 
 {block name="footer_js"}
@@ -64,6 +80,7 @@
         const lower_temp_element = document.getElementById('lower_temp_element');
         const average_temp_element = document.getElementById('average_temp_element');
         const highter_temp_element = document.getElementById('highter_temp_element');
+        const table_history = document.getElementById('table_history');
         const no_data_element = document.getElementById('no_data_loaded');
         var initialized = false;
         var date = '';
@@ -126,6 +143,8 @@
                     average_temp_element.innerHTML = 'NaN';
                     highter_temp_element.innerHTML = 'NaN';
 
+                    table_history.innerHTML = '';
+
                     no_data_element.innerHTML = '* The API seems to have problems, try again later.';
                     return;
                 }
@@ -156,6 +175,12 @@
                 lower_temp_element.innerHTML = format_weather_temperature(lower_average_highter_temperature[0]);
                 average_temp_element.innerHTML = '~' + format_weather_temperature(lower_average_highter_temperature[1]);
                 highter_temp_element.innerHTML = format_weather_temperature(lower_average_highter_temperature[2]);
+
+                let table_content = '';
+                for (let i = 0; i < data.length; i++) {
+                    table_content += '<tr><td>' + (i + 1) + '</td><td>' + data[i].temperature + '°</td><td>' + data[i].created_at + '</td></tr>'
+                }
+                table_history.innerHTML = table_content;
 
                 // remove no data message
                 no_data_element.innerHTML = '';
