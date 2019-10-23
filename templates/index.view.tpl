@@ -128,11 +128,14 @@
                 average_temp_element.innerHTML = 'NaN';
                 highter_temp_element.innerHTML = 'NaN';
 
+                table_history.innerHTML = '';
+
                 // set no data message
                 let message = 'There is nothing to show for ';
                 message += ('' === date) ? 'now' : date + '.';
                 no_data_element.innerHTML = '* ' + message;
                 console.log('[-] ' + message);
+                return;
             } else {
                 // if error return by the api
                 if (not_null_or_undefined(data.error)) {
@@ -178,7 +181,7 @@
 
                 let table_content = '';
                 for (let i = 0; i < data.length; i++) {
-                    table_content += '<tr><td>' + (i + 1) + '</td><td>' + data[i].temperature + '°</td><td>' + data[i].created_at + '</td></tr>'
+                    table_content += '<tr><td>' + (i + 1) + '</td><td>' + data[i].temperature + '°</td><td>' + data[i].created_at + '</td></tr>';
                 }
                 table_history.innerHTML = table_content;
 
@@ -221,6 +224,8 @@
                     lower_temp_element.innerHTML = 'NaN';
                     average_temp_element.innerHTML = 'NaN';
                     highter_temp_element.innerHTML = 'NaN';
+
+                    table_history.innerHTML = '';
 
                     no_data_element.innerHTML = '* An error was occured, check the console logs for more infos.';
                     console.warn(error);
