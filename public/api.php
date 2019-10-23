@@ -26,14 +26,3 @@ try {
 } catch (Exception $e) {
     echo json_encode(['error' => 'Bad query']);
 }
-
-/*$limit = !empty($_GET['limit']) ? (int) $_GET['limit'] ?? false : false;
-    if (false !== $limit && 0 >= $limit) $limit = false;
-    $sort = !empty($_GET['sort']) ? 'desc' === $_GET['sort'] ? 'desc' : 'asc' : false;
-
-    if (!empty($_GET['date'])) {
-        $sql_q.= ' WHERE created_at LIKE :created_at';
-        $sql_value_to_bind[':created_at'] = filter_input(INPUT_GET, "date", FILTER_SANITIZE_STRING).'%';
-    }
-    if ($sort) $sql_q.= ' ORDER BY id '.$sort;
-    if ($limit) $sql_q.= ' LIMIT '.$limit;*/
