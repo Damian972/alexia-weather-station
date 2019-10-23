@@ -1,4 +1,5 @@
 {extends file="default.view.tpl"}
+{block name="title"}Connexion{/block}
 
 {block name="content"}
     <div class="container align-center">
