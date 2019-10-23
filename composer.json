@@ -5,12 +5,12 @@
         "name": "Damian972"
     }],
     "require": {
-        "catfan/medoo": "^1.7"
+        "catfan/medoo": "^1.7",
+        "smarty/smarty": "^3.1"
     },
     "autoload": {
         "files": [
             "config/config.php",
-            "includes/Smarty.class.php",
             "includes/Utils.php"
         ]
     }

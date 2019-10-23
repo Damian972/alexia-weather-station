@@ -38,7 +38,6 @@ if (isset($_POST['change_my_account_info'])) {
                     ], ['email' => $_SESSION['user']['email']]);
                 }
                 if ($is_query_ok !== false) {
-                    echo 'yessssssss';
                     $_SESSION['user']['email'] = htmlspecialchars($email);
                     Utils::setFlash('Modifications enregistrées !!', 'success');
         
@@ -46,9 +45,9 @@ if (isset($_POST['change_my_account_info'])) {
             }
         } else $_SESSION['form_errors']['email'] = 'Merci de bien vouloir entrer un email valide.';
 
-    } else $_SESSION['form_errors']['username'] = 'Votre nom d\'utilisateur doit être supérieur à 3 caractères';
+    } else $_SESSION['form_errors']['username'] = 'Votre nom d\'utilisateur doit être supérieur à 3 caractères.';
     
-    if (0 < count($_SESSION['form_errors'])) Utils::setFlash('Merci de corriger les erreurs!', 'danger'); 
+    if (!empty($_SESSION['form_errors'])) Utils::setFlash('Merci de corriger les erreurs !', 'danger'); 
     
     Utils::redirectToSame();
 }
