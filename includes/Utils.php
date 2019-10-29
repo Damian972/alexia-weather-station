@@ -34,8 +34,11 @@ class Utils{
     public static function getOptionsFromDb(Medoo $db): array
     {
         $options = [];
-        foreach ($db->select('options', ['name', 'value']) as $option) {
-            $options[$option['name']] = $option['value'];
+        $result = $db->select('options', ['name', 'value']);
+        if (is_array($result)) {
+            foreach ($db->select('options', ['name', 'value']) as $option) {
+                $options[$option['name']] = $option['value'];
+            }
         }
         return $options;
     }

@@ -1,21 +1,24 @@
 /**
- * Script: Alexia's weather station [Smartech Sensor]
- * Author: Damian972
- * Version: 1.0
- * License: MIT
- */
-
-/**
  * @var
  */
 
-const LIMIT_DATA_TO_SHOW = 10;
+const BASE_URL = "http://192.168.1.32:8080";
+const API_URL = "http://192.168.1.32:8080/api.php";
+
+const CHART_REFRESH_INTERVAL = 10;
+const LIMIT_DATA_TO_SHOW = (900 < window.innerWidth) ? 10 : 5;
+
+
 const picker = document.getElementById('datetime-picker');
 const last_temp_element = document.getElementById('last_temp');
 const last_temp_date_element = document.getElementById('last_temp_date');
+const lower_temp_element = document.getElementById('lower_temp_element');
+const average_temp_element = document.getElementById('average_temp_element');
+const highter_temp_element = document.getElementById('highter_temp_element');
+const table_history = document.getElementById('table_history');
 const no_data_element = document.getElementById('no_data_loaded');
 var initialized = false;
-var date = '';
+var date = get_current_date();
 
 /**
  * @functions
@@ -23,8 +26,9 @@ var date = '';
 
 function init() {
     console.log('init function');
+    console.log('[!] Refresh every ' + CHART_REFRESH_INTERVAL + 's');
     if (0 === picker.value.length) picker.value = get_current_date();
-    retrive_data_from_api('http://192.168.1.32:8080/api.php', 'sort=asc')
+    retrive_data_from_api(API_URL, 'sort=desc')
         .then((data) => {
             if (not_null_or_undefined(data)) {
                 update_chart(data);
@@ -50,19 +54,42 @@ function update_chart(data) {
     // clear old data
     window.chart.data.datasets[0].data = [];
     window.chart.data.labels = [];
-    const no_data_p = document.getElementById('no_data_loaded');
+
     if (0 === data.length) {
+        last_temp_element.innerHTML = 'NaN';
+        last_temp_date_element.innerHTML = 'NaN';
+
+        lower_temp_element.innerHTML = 'NaN';
+        average_temp_element.innerHTML = 'NaN';
+        highter_temp_element.innerHTML = 'NaN';
+
+        table_history.innerHTML = '';
+
         // set no data message
         let message = 'There is nothing to show for ';
-        message += ('' === date) ? 'now' : date;
-        no_data_p.innerHTML = '* ' + message;
+        message += ('' === date) ? 'now' : date + '.';
+        no_data_element.innerHTML = '* ' + message;
+
+        // Update the chart
+        window.chart.update();
         console.log('[-] ' + message);
+        return;
     } else {
         // if error return by the api
         if (not_null_or_undefined(data.error)) {
             last_temp_element.innerHTML = 'NaN';
             last_temp_date_element.innerHTML = 'NaN';
+
+            lower_temp_element.innerHTML = 'NaN';
+            average_temp_element.innerHTML = 'NaN';
+            highter_temp_element.innerHTML = 'NaN';
+
+            table_history.innerHTML = '';
+
             no_data_element.innerHTML = '* The API seems to have problems, try again later.';
+
+            // Update the chart
+            window.chart.update();
             return;
         }
 
@@ -70,25 +97,58 @@ function update_chart(data) {
         data = data.reverse();
 
         // set new data
+        last_temp_element.innerHTML = format_weather_temperature(data[data.length - 1].temperature) + 'C';
+        last_temp_date_element.innerHTML = data[data.length - 1].created_at;
+
+        let limit = not_null_or_undefined(LIMIT_DATA_TO_SHOW) ? LIMIT_DATA_TO_SHOW : 10;
         for (let i = 0; i < data.length; i++) {
+            // limit data in the chart
+            if (limit <= i) {
+                return;
+            }
             window.chart.data.datasets[0].data[i] = data[i].temperature;
             window.chart.data.labels[i] = data[i].created_at;
             let color_palette = generate_random_color_palette();
             window.chart.data.datasets[0].backgroundColor[i] = color_palette[0];
             window.chart.data.datasets[0].borderColor[i] = color_palette[1];
         }
+
+        // set lower, average, highter temperature
+        let lower_average_highter_temperature = get_lower_average_highter_from_array(data);
+
+        //console.log(lower_average_highter_temperature);
+        lower_temp_element.innerHTML = format_weather_temperature(lower_average_highter_temperature[0]);
+        average_temp_element.innerHTML = '~' + format_weather_temperature(lower_average_highter_temperature[1]);
+        highter_temp_element.innerHTML = format_weather_temperature(lower_average_highter_temperature[2]);
+
+        let table_content = '';
+        for (let i = 0; i < data.length; i++) {
+            table_content += '<tr><td>' + (i + 1) + '</td><td>' + data[i].temperature + '°</td><td>' + data[i].created_at + '</td></tr>';
+        }
+        table_history.innerHTML = table_content;
+
         // remove no data message
-        no_data_p.innerHTML = '';
+        no_data_element.innerHTML = '';
     }
     // update the chart
     window.chart.update();
 }
 
+function retrive_data() {
+    retrive_data_from_api(API_URL, 'sort=desc')
+        .then((data) => {
+            if (not_null_or_undefined(data)) update_chart(data);
+        })
+        .catch(error => console.warn(error));
+}
+
 function retrive_data_from_api(uri, args = '') {
     if (0 === date.length) {
-        uri += '?' + args;
-    } else uri += '?date=' + date + '&' + args;
-    uri += not_null_or_undefined(LIMIT_DATA_TO_SHOW) ? '&limit=' + LIMIT_DATA_TO_SHOW : '&limit=0';
+        date = get_current_date();
+    }
+    uri += '?date=' + date + '&' + args;
+    // Set limit data to retrieve from the api
+    //uri += not_null_or_undefined(LIMIT_DATA_TO_SHOW) ? '&limit=' + LIMIT_DATA_TO_SHOW : '&limit=0';
     console.log('[!] ' + uri);
 
     return fetch(uri)
@@ -96,35 +156,37 @@ function retrive_data_from_api(uri, args = '') {
             return response.json();
         })
         .then((json) => {
-            //console.log(json);
             return json;
         })
         .catch((error) => {
             last_temp_element.innerHTML = 'NaN';
             last_temp_date_element.innerHTML = 'NaN';
+
+            lower_temp_element.innerHTML = 'NaN';
+            average_temp_element.innerHTML = 'NaN';
+            highter_temp_element.innerHTML = 'NaN';
+
+            table_history.innerHTML = '';
+
             no_data_element.innerHTML = '* An error was occured, check the console logs for more infos.';
             console.warn(error);
         });
 }
 
-function retrive_data_from_api(uri, args = '') {
-    if (0 === date.length) {
-        uri += '?' + args;
-    } else uri += '?date=' + date + '&' + args;
-    uri += not_null_or_undefined(LIMIT_DATA_TO_SHOW) ? '&limit=' + LIMIT_DATA_TO_SHOW : '&limit=0';
-    console.log(uri);
+function get_lower_average_highter_from_array(data) {
+    let max = -Infinity;
+    let min = +Infinity;
+    let total = 0;
 
-    return fetch(uri)
-        .then((response) => {
-            return response.json();
-        })
-        .then((json) => {
-            //console.log(json);
-            return json;
-        })
-        .catch(error => console.warn(error));
+    for (let i = 0; i < data.length; i++) {
+        let n = format_number(data[i].temperature);
+        if (n > max) max = n;
+        if (n < min) min = n;
+        total += parseInt(n, 10);
+    }
+    let result = [min, (total / data.length), max]
+    return result;
 }
-
 
 function get_current_date() {
     return (new Date()).toISOString().slice(0, 10);
@@ -141,8 +203,13 @@ function generate_random_color_palette() {
     ];
 }
 
+function format_weather_temperature(temp) {
+    temp = format_number(temp);
+    return (0 < temp) ? '+' + temp + '°' : temp + '°';
+}
+
 function format_number(value) {
-    return parseFloat(Math.round(value * 100) / 100).toFixed(2);
+    return parseFloat((Math.round(value * 100) / 100).toFixed(2));
 }
 
 function get_random_int(min, max) {
@@ -164,7 +231,7 @@ window.onload = () => {
         data: {
             labels: [],
             datasets: [{
-                label: 'Temperature',
+                label: 'Température',
                 data: [],
                 backgroundColor: [],
                 borderColor: [],
@@ -189,5 +256,5 @@ $(document).ready(() => {
     init();
     setInterval(() => {
         update();
-    }, 5 * 1000);
+    }, CHART_REFRESH_INTERVAL * 1000);
 });

@@ -65,7 +65,7 @@ return [
                 'NOT NULL'
             ],
             'temperature' => [
-                'VARCHAR(15)',
+                'REAL', //VARCHAR(15)
                 'NOT NULL'
             ],
             'created_at' => [

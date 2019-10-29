@@ -119,7 +119,7 @@
             // clear old data
             window.chart.data.datasets[0].data = [];
             window.chart.data.labels = [];
-    
+
             if (0 === data.length) {
                 last_temp_element.innerHTML = 'NaN';
                 last_temp_date_element.innerHTML = 'NaN';
@@ -134,6 +134,9 @@
                 let message = 'There is nothing to show for ';
                 message += ('' === date) ? 'now' : date + '.';
                 no_data_element.innerHTML = '* ' + message;
+
+                // Update the chart
+                window.chart.update();
                 console.log('[-] ' + message);
                 return;
             } else {
@@ -149,6 +152,9 @@
                     table_history.innerHTML = '';
 
                     no_data_element.innerHTML = '* The API seems to have problems, try again later.';
+                    
+                    // Update the chart
+                    window.chart.update();
                     return;
                 }
 
@@ -174,6 +180,7 @@
 
                 // set lower, average, highter temperature
                 let lower_average_highter_temperature = get_lower_average_highter_from_array(data);
+
                 //console.log(lower_average_highter_temperature);
                 lower_temp_element.innerHTML = format_weather_temperature(lower_average_highter_temperature[0]);
                 average_temp_element.innerHTML = '~' + format_weather_temperature(lower_average_highter_temperature[1]);
@@ -202,7 +209,7 @@
 
         function retrive_data_from_api(uri, args = '') {
             if (0 === date.length) {
-               date = get_current_date();
+                date = get_current_date();
             }
             uri += '?date=' + date + '&' + args;
             // Set limit data to retrieve from the api
@@ -214,13 +221,12 @@
                     return response.json();
                 })
                 .then((json) => {
-                    //console.log(json);
                     return json;
                 })
                 .catch((error) => {
                     last_temp_element.innerHTML = 'NaN';
                     last_temp_date_element.innerHTML = 'NaN';
-                    
+
                     lower_temp_element.innerHTML = 'NaN';
                     average_temp_element.innerHTML = 'NaN';
                     highter_temp_element.innerHTML = 'NaN';
@@ -236,13 +242,15 @@
             let max = -Infinity;
             let min = +Infinity;
             let total = 0;
-            
+
             for (let i = 0; i < data.length; i++) {
-                if (data[i].temperature > max) max = data[i].temperature;
-                if (data[i].temperature < min) min = data[i].temperature;
-                total += parseInt(data[i].temperature, 10);
+                let n = format_number(data[i].temperature);
+                if (n > max) max = n;
+                if (n < min) min = n;
+                total += parseInt(n, 10);
             }
-            return [min, (total / data.length), max];
+            let result = [min, (total / data.length), max]
+            return result;
         }
 
         function get_current_date() {
@@ -261,12 +269,12 @@
         }
 
         function format_weather_temperature(temp) {
-            if (-1 === Math.sign(format_number(temp))) return '-' + temp + '°';
-            return '+' + temp + '°';
+            temp = format_number(temp);
+            return (0 < temp) ? '+' + temp + '°' : temp + '°';
         }
 
         function format_number(value) {
-            return parseFloat(Math.round(value * 100) / 100).toFixed(2);
+            return parseFloat((Math.round(value * 100) / 100).toFixed(2));
         }
 
         function get_random_int(min, max) {

@@ -1,3 +1,7 @@
+<!--
+Alexia's Weather station
+Contributors: Damian972 (main), Eterismo
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>

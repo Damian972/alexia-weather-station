@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Smartech Sensor</title>
-    <link rel="stylesheet" href="assets/css/mustard-ui.css">
-    <link rel="stylesheet" href="assets/css/chart.css">
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/chart.js"></script>
+    <link rel="stylesheet" href="http://192.168.1.32:8080/assets/css/mustard-ui.css">
+    <link rel="stylesheet" href="http://192.168.1.32:8080/assets/css/chart.css">
+    <link rel="stylesheet" href="http://192.168.1.32:8080/assets/css/mustard-ui-fixes.css">
+    <script src="http://192.168.1.32:8080/assets/js/jquery.js"></script>
+    <script src="http://192.168.1.32:8080/assets/js/chart.js"></script>
 </head>
 
 <body>
@@ -19,15 +20,57 @@
                 <h2>Température: <span id="last_temp"></span></h2>
                 <p>Enregistré le: <span id="last_temp_date"></span></p>
             </div>
-            <canvas id="chart" width="800" height="400"></canvas>
+            <canvas id="chart" class="custom-chart"></canvas>
             <br>
             <div class="align-center">
-                <input type="date" id="datetime-picker">
-                <button onclick="update_by_date()">Charger</button>
-                <p class="validation-error" id="no_data_loaded"></p>
+                <div class="row">
+                    <div class="col col-sm-12 col-md-8">
+                        <input type="date" id="datetime-picker">
+                    </div>
+                    <div class="col col-sm-12 col-md-4">
+                        <button class="button-primary" onclick="update_by_date()">Charger</button>
+                    </div>
+                    <p class="validation-error" id="no_data_loaded"></p>
+                </div>
             </div>
         </section>
-        <script src="test.js"></script>
+    </div>
+    <section class="section-primary" style="padding: 15px;">
+        <div class="container align-center" style="padding-bottom: 10px;">
+            <div class="row">
+                <div class="col col-sm-12 col-md-4">
+                    <h3 id="lower_temp_element">NaN</h3>
+                    <p>Température la plus basse</p>
+                </div>
+                <div class="col col-sm-12 col-md-4">
+                    <h3 id="average_temp_element">NaN</h3>
+                    <p>Température moyenne</p>
+                </div>
+                <div class="col col-sm-12 col-md-4">
+                    <h3 id="highter_temp_element">NaN</h3>
+                    <p>Température la plus haute</p>
+                </div>
+            </div>
+            <small class="validation-error">*Résultats basés sur toutes les données de la journée</small>
+        </div>
+    </section>
+    <div class="container align-center">
+        <section>
+            <h2>Historique des températures</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Temperature</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="table_history">
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <script src="test.js"></script>
     </div>
 </body>
 
