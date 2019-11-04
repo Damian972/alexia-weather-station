@@ -90,10 +90,10 @@ return [
             ['name' => 'refresh_time_cli', 'value' => 120],
             ['name' => 'refresh_time_gui', 'value' => 120],
             ['name' => 'max_data_to_show', 'value' => 10], // On mobile view, the limit is forced to 5 to be responsive
-            ['name' => 'alert_threshold_min', 'value' => 10],
-            ['name' => 'alert_threshold_max', 'value' => 40],
-            ['name' => 'alert_method', 'value' => 1],
-            ['name' => 'alert_method_pushbullet_api_key', 'value' => 1]
+            ['name' => 'alert_threshold_min_temperature', 'value' => 10],
+            ['name' => 'alert_threshold_max_temperature', 'value' => 40],
+            ['name' => 'alert_method', 'value' => '1'],
+            ['name' => 'alert_method_pushbullet_api_key', 'value' => '']
         )]
     ],
 
