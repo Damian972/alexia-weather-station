@@ -2,6 +2,7 @@
 *.txt
 templates/bak
 config/config.php
+var/.installed
 var/*.db
 var/*.sqlite
 var/*.txt
