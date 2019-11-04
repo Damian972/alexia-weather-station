@@ -67,7 +67,8 @@ class Utils{
         ->assign('is_logged', self::isLogged());
     }
 
-    public function redirectToHome(): void {
+    public function redirectToHome(): void 
+    {
         header('Location: '.BASE_URL);
         exit();
     }
@@ -77,6 +78,39 @@ class Utils{
         #Redirect user on same page to unset $_POST
         header('Location: '.$_SERVER['PHP_SELF']);
         exit();
+    }
+
+    public static function sendPushbulletNotif(string $title, string $message, string $auth_token)
+    {
+        $data = json_encode(['type' => 'note', 'title' => $title, 'body' => $message]);
+        $curl = curl_init('https://api.pushbullet.com/v2/pushes');                                                                      
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);                                                                  
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);                                                                      
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Access-Token: '  .$auth_token,                                                                     
+            'Content-Type: application/json',                                                                                
+            'Content-Length: ' . strlen($data))                                                                       
+        );                                                                                                                                                                                                                   
+        $result = curl_exec($curl);
+    }
+
+    public static function sendMail(array $emails, string $title, string $template, array $template_params = []): void
+    {
+        if (empty($emails)) return;
+        $headers = "From: " . WEBSITE_NAME . "\r\n";
+        //$headers .= "Reply-To: ". WEBSITE_NAME . "\r\n";
+        //$headers .= "CC: susan@example.com\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+        $smarty = self::getSmartyInstance();
+        $smarty->assign($template_params);
+        $html =  $smarty->fetch($template);
+
+        foreach ($emails as $email) {
+            mail($email, '['.WEBSITE_NAME. '] '.$title, $html,$headers);
+        }
     }
 
     public static function debug($var): void

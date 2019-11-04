@@ -5,6 +5,9 @@
     <section>
         <div class="container">
             <h2 class="align-center">Paramètres</h2>
+            {if !empty($smarty.session.notification.message)}
+                <p class="alert alert-{$smarty.session.notification.type}" style="width: 300px;">{$smarty.session.notification.message}</p>
+            {/if}
             <div class="row">
                 <div class="col col-sm-12 col-md-8 col-md-offset-2">
                     <fieldset>
@@ -14,23 +17,23 @@
                                 <div class="col col-sm-12 col-md-6">
                                     <div class="form-control">
                                         <label>MIN:</label>
-                                        <input type="number" {if isset($smarty.session.form_errors.refresh_time_cli)}class="invalid"{/if} name="refresh_time_cli" value="{$options.refresh_time_cli|default: '120'}">
-                                        {if isset($smarty.session.form_errors.refresh_time_cli)}
-                                            <p class="validation-error">{$smarty.session.form_errors.refresh_time_cli}</p>
+                                        <input type="number" {if isset($smarty.session.form_errors.alert_threshold_min)}class="invalid"{/if} name="alert_threshold_min" value="{$options.alert_threshold_min|default: '10'}">
+                                        {if isset($smarty.session.form_errors.alert_threshold_min)}
+                                            <p class="validation-error">{$smarty.session.form_errors.alert_threshold_min}</p>
                                         {/if}
                                     </div>
                                 </div>
                                 <div class="col col-sm-12 col-md-6">
                                     <div class="form-control">
                                         <label>MAX:</label>
-                                        <input type="number" {if isset($smarty.session.form_errors.refresh_time_cli)}class="invalid"{/if} name="refresh_time_cli" value="{$options.refresh_time_cli|default: '120'}">
-                                        {if isset($smarty.session.form_errors.refresh_time_cli)}
-                                            <p class="validation-error">{$smarty.session.form_errors.refresh_time_cli}</p>
+                                        <input type="number" {if isset($smarty.session.form_errors.alert_threshold_max)}class="invalid"{/if} name="alert_threshold_max" value="{$options.alert_threshold_max|default: '40'}">
+                                        {if isset($smarty.session.form_errors.alert_threshold_max)}
+                                            <p class="validation-error">{$smarty.session.form_errors.alert_threshold_max}</p>
                                         {/if}
                                     </div>
                                 </div>
                                 <div class="form-control">
-                                    <button type="submit">Enregistrer</button>
+                                    <button type="submit" name="settings_alert_threshold_form">Enregistrer</button>
                                 </div>
                             </div>
                         </form>
@@ -58,7 +61,7 @@
                                     </div>
                                 </div>
                                 <div class="form-control">
-                                    <button type="submit">Enregistrer</button>
+                                    <button type="submit" name="settings_refresh_time_form">Enregistrer</button>
                                 </div>
                             </div>
                         </form>
@@ -79,13 +82,13 @@
                                 <div class="col col-sm-12 col-md-6">
                                     <div class="form-control">
                                     <p>Method:</p>
-                                        <label><input type="radio" name="radio">Pushbullet</label>
+                                        <label><input type="radio" name="alert_method" value="0" checked>Pushbullet</label>
                                         &nbsp;&nbsp;&nbsp;
-                                        <label><input type="radio" name="radio">Email</label>
+                                        <label><input type="radio" name="alert_method" value="1">Email</label>
                                     </div>
                                 </div>
                                  <div class="form-control">
-                                    <button type="submit">Enregistrer</button>
+                                    <button type="submit" name="alert_method_form">Enregistrer</button>
                                 </div>
                             </div>
                         </form>
