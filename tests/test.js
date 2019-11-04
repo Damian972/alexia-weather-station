@@ -101,13 +101,14 @@ function update_chart(data) {
         last_temp_date_element.innerHTML = data[data.length - 1].created_at;
 
         let limit = not_null_or_undefined(LIMIT_DATA_TO_SHOW) ? LIMIT_DATA_TO_SHOW : 10;
-        for (let i = 0; i < data.length; i++) {
+        let total_data = data.length;
+        for (let i = 0; i < total_data; i++) {
             // limit data in the chart
             if (limit <= i) {
-                return;
+                break;
             }
-            window.chart.data.datasets[0].data[i] = data[i].temperature;
-            window.chart.data.labels[i] = data[i].created_at;
+            window.chart.data.datasets[0].data[(limit - i) - 1] = data[(total_data - i) - 1].temperature;
+            window.chart.data.labels[(limit - i) - 1] = data[(total_data - i) - 1].created_at;
             let color_palette = generate_random_color_palette();
             window.chart.data.datasets[0].backgroundColor[i] = color_palette[0];
             window.chart.data.datasets[0].borderColor[i] = color_palette[1];
