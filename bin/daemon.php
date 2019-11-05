@@ -53,7 +53,7 @@ try {
 			if (!$interval_to_refresh) throw new Exception('Interval de rafraichissement invalide');
 
 		}
-		sleep(5 ?? $interval_to_refresh ?? 120);
+		sleep($interval_to_refresh ?? 120);
 	}
 	
 	fclose($handle); 
