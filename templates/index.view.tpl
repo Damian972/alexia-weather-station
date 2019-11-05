@@ -91,7 +91,7 @@
 
         function init() {
             console.log('init function');
-            console.log('[!] Refresh every ' + CHART_REFRESH_INTERVAL + 's');
+            console.log('[!] Refresh every ' + CHART_REFRESH_INTERVAL + 's for the GUI.');
             if (0 === picker.value.length) picker.value = get_current_date();
             retrive_data_from_api(API_URL, 'sort=desc')
                 .then((data) => {
@@ -167,7 +167,6 @@
 
                 let limit = not_null_or_undefined(LIMIT_DATA_TO_SHOW) ? LIMIT_DATA_TO_SHOW : 10;
                 let total_data = data.length;
-                let temp_data = {};
                 for (let i = 0; i < total_data; i++) {
                     // limit data in the chart
                     if (limit <= i) {
@@ -179,19 +178,10 @@
                     window.chart.data.datasets[0].backgroundColor[i] = color_palette[0];
                     window.chart.data.datasets[0].borderColor[i] = color_palette[1];
                 }
-                // reverse data
-                /*let reversed_data = [[], []];
-                for (let i = 0; i < window.chart.data.datasets[0].data.length; i++) {
-                    reversed_data[0][i] = window.chart.data.datasets[0].data[i];
-                }*/
-
-                //window.chart.data.datasets[0].data = window.chart.data.datasets[0].reverse();
-                console.log(window.chart.data.datasets[0]);
 
                 // set lower, average, highter temperature
                 let lower_average_highter_temperature = get_lower_average_highter_from_array(data);
 
-                //console.log(lower_average_highter_temperature);
                 lower_temp_element.innerHTML = format_weather_temperature(lower_average_highter_temperature[0]);
                 average_temp_element.innerHTML = '~' + format_weather_temperature(lower_average_highter_temperature[1]);
                 highter_temp_element.innerHTML = format_weather_temperature(lower_average_highter_temperature[2]);
