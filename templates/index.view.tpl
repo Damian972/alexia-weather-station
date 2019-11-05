@@ -167,17 +167,24 @@
 
                 let limit = not_null_or_undefined(LIMIT_DATA_TO_SHOW) ? LIMIT_DATA_TO_SHOW : 10;
                 let total_data = data.length;
+                let temp_data = {};
                 for (let i = 0; i < total_data; i++) {
                     // limit data in the chart
                     if (limit <= i) {
                         break;
                     }
-                    window.chart.data.datasets[0].data[(limit - i) - 1] = data[(total_data - i) - 1].temperature;
-                    window.chart.data.labels[(limit - i) - 1] = data[(total_data - i) - 1].created_at;
+                    window.chart.data.datasets[0].data[i] = data[i].temperature;
+                    window.chart.data.labels[i] = data[i].created_at;
                     let color_palette = generate_random_color_palette();
                     window.chart.data.datasets[0].backgroundColor[i] = color_palette[0];
                     window.chart.data.datasets[0].borderColor[i] = color_palette[1];
                 }
+                // reverse data
+                /*let reversed_data = [[], []];
+                for (let i = 0; i < window.chart.data.datasets[0].data.length; i++) {
+                    reversed_data[0][i] = window.chart.data.datasets[0].data[i];
+                }*/
+
                 //window.chart.data.datasets[0].data = window.chart.data.datasets[0].reverse();
                 console.log(window.chart.data.datasets[0]);
 

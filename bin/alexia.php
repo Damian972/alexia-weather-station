@@ -33,7 +33,7 @@ if ($config['install']) {
             }
         }
         echo '[+] Default data creation: OK'.PHP_EOL;
-        file_put_contents(VARF.'/installed', 'ok');
+        file_put_contents(VARF.'/.installed', 'ok');
     } catch (\Exception $e) {
         echo $e->getMessage();
     }

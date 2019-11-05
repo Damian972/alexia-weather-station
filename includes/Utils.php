@@ -108,8 +108,8 @@ class Utils{
         $smarty->assign($template_params);
         $html =  $smarty->fetch($template);
 
-        foreach ($emails as $email) {
-            mail($email, '['.WEBSITE_NAME. '] '.$title, $html,$headers);
+        foreach ($emails as $k => $v) {
+            mail($v['email'], '['.WEBSITE_NAME. '] '.$title, $html, $headers);
         }
     }
 
