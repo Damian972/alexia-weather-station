@@ -46,14 +46,14 @@ try {
 					}
 				}
 			} else echo '['.$data['created_at'].'] => Impossible de verifier si'.PHP_EOL;
-			$db->insert('data', $data);
+			//$db->insert('data', $data);
 
 			echo '['.$data['created_at'].'] => '.$data['temperature'].'°C'.PHP_EOL;
 			$interval_to_refresh = (int) $options['refresh_time_cli'];
 			if (!$interval_to_refresh) throw new Exception('Interval de rafraichissement invalide');
 
+			sleep($interval_to_refresh);
 		}
-		sleep($interval_to_refresh);
 	}
 	
 	fclose($handle); 
