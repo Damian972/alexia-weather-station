@@ -158,26 +158,33 @@
                     return;
                 }
 
-                // reverse array
-                data = data.reverse();
-
                 // set new data
-                last_temp_element.innerHTML = format_weather_temperature(data[data.length - 1].temperature) + 'C';
-                last_temp_date_element.innerHTML = data[data.length - 1].created_at;
+                last_temp_element.innerHTML = format_weather_temperature(data[0].temperature) + 'C';
+                last_temp_date_element.innerHTML = data[0].created_at;
 
                 let limit = not_null_or_undefined(LIMIT_DATA_TO_SHOW) ? LIMIT_DATA_TO_SHOW : 10;
                 let total_data = data.length;
+                let _l = (data.length < limit) ? data.length : limit;
                 for (let i = 0; i < total_data; i++) {
                     // limit data in the chart
                     if (limit <= i) {
                         break;
                     }
-                    window.chart.data.datasets[0].data[i] = data[i].temperature;
-                    window.chart.data.labels[i] = data[i].created_at;
+                    window.chart.data.datasets[0].data[i] = data[(_l - i) - 1].temperature;
+                    window.chart.data.labels[i] = data[(_l - i) - 1].created_at;
                     let color_palette = generate_random_color_palette();
                     window.chart.data.datasets[0].backgroundColor[i] = color_palette[0];
                     window.chart.data.datasets[0].borderColor[i] = color_palette[1];
                 }
+
+                /*let total_chart_data = window.chart.data.datasets[0].data.length;
+                let new_chart_data = [];
+                for (let i = 0; i < total_chart_data; i++) {
+                    new_chart_data[i] = window.chart.data.datasets[0].data[(total_chart_data - i) - 1];
+                }
+                window.chart.data.datasets[0].data = new_chart_data;
+
+                console.log(new_chart_data);*/
 
                 // set lower, average, highter temperature
                 let lower_average_highter_temperature = get_lower_average_highter_from_array(data);
