@@ -107,8 +107,8 @@ function update_chart(data) {
             if (limit <= i) {
                 break;
             }
-            window.chart.data.datasets[0].data[(limit - i) - 1] = data[(total_data - i) - 1].temperature;
-            window.chart.data.labels[(limit - i) - 1] = data[(total_data - i) - 1].created_at;
+            window.chart.data.datasets[0].data[i] = data[i].temperature;
+            window.chart.data.labels[i] = data[i].created_at;
             let color_palette = generate_random_color_palette();
             window.chart.data.datasets[0].backgroundColor[i] = color_palette[0];
             window.chart.data.datasets[0].borderColor[i] = color_palette[1];
