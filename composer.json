@@ -5,6 +5,7 @@
         "name": "Damian972"
     }],
     "require": {
+        "php": "^7.2",
         "catfan/medoo": "^1.7",
         "smarty/smarty": "^3.1"
     },
