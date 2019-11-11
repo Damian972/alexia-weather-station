@@ -35,7 +35,7 @@ Ici j'utilise celui de PHP directement, mais vous pouvez utiliser Apache ou Ngin
 
 Pour lancer notre serveur avec PHP, on lance alors: `php -S localhost:8080 -t public`.
 
-Pourquoi le flag `-t` car notre applicatin web se situe dans le dossier public
+Pourquoi le flag `-t` car notre applicatin web se situe dans le dossier public.
 
 Le serveur est donc accessible en local sur le port 8080.
 
