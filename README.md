@@ -56,7 +56,7 @@ ToDo
 -
 
 - [ ] Rédiger un `readme.md` en anglais.
-- [ ] Remplacer les messages en français par de l'anglais où faire un système de traduction...
+- [ ] Remplacer les messages en français par de l'anglais ou faire un système de traduction...
 
 
 Pourquoi j'ai utilisé PHP ?
